@@ -1,41 +1,26 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
-import ContactForm from './ContactForm';
-import Filter from './Filter';
-import ContactList from './ContactList';
-// import ContactsDemo from './contactDemo.json';
-import { Wrapper, Title, SubTitle } from './App.styled';
 
-export const App = () => {
-  const [contacts, setContacts] = useState([]);
+import Container from './Container/Container';
+import ContactForm from './ContactForm/ContactForm';
+import ContactList from './ContactList/ContactList';
+import Filter from './Filter/Filter';
+
+const App = () => {
+  const [contacts, setContacts] = useState(
+    () => JSON.parse(localStorage.getItem('contacts')) ?? []
+  );
   const [filter, setFilter] = useState('');
 
-  const firstRender = useRef(true);
-  // useEffect(() => {
-  //   const items = JSON.parse(localStorage.getItem('Phonebook'));
-  //   if (items?.length) {
-  //     setContacts(items);
-  //   }
-  // }, []);
-
   useEffect(() => {
-    if (!firstRender.current) {
-      localStorage.setItem('Phonebook', JSON.stringify(contacts));
-    } else {
-      const items = JSON.parse(localStorage.getItem('Phonebook'));
-      if (items?.length) {
-        setContacts(items);
-      }
-      firstRender.current = false;
-    }
+    localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  const addContact = data => {
-    const { name, number } = data;
+  const addContact = ({ name, number }) => {
     const newContact = {
-      name,
-      number,
       id: nanoid(),
+      name: name,
+      number: number,
     };
 
     if (
@@ -43,44 +28,49 @@ export const App = () => {
         contact => contact.name.toLowerCase() === name.toLowerCase()
       )
     ) {
-      alert(`${data.name} is already in contacts!`);
-      return;
+      return alert(`${name} is already in contacts`);
     }
-    setContacts(prevContacts => [...prevContacts, newContact]);
-  };
-
-  const removeContact = id => {
-    setContacts(prevContacts => prevContacts.filter(item => item.id !== id));
-  };
-
-  const getFilteredContacts = () => {
-    //проверка на пустую строку
-    if (!filter) {
-      return contacts;
+    if (contacts.find(contact => contact.number === number)) {
+      return alert(`${number} is already in contacts`);
     }
-    const filterValue = filter.toLowerCase();
-    const filteredContacts = contacts.filter(({ name }) => {
-      const nameValue = name.toLowerCase();
-      return nameValue.includes(filterValue);
-    });
-    return filteredContacts;
+    if (name.trim() === '' || number.trim() === '') {
+      alert(`Enter the contact's name and number phone!`);
+    }
+    setContacts(prevState =>
+      [newContact, ...prevState].sort((first, second) =>
+        first.name.localeCompare(second.name)
+      )
+    );
+    return true;
   };
 
-  const handleFilter = ({ target }) => setFilter(target.value);
+  const handleFilter = e => {
+    setFilter(e.currentTarget.value);
+  };
 
-  const filteredContacts = getFilteredContacts();
+  const deleteContact = contactId => {
+    setContacts(prevState =>
+      prevState.filter(contact => contact.id !== contactId)
+    );
+  };
+
+  const visibleContacts = contacts.filter(element =>
+    element.name.toUpperCase().includes(filter.toUpperCase())
+  );
+
   return (
-    <>
-      <Wrapper>
-        <Title>Phonebook</Title>
-        <ContactForm onSubmit={addContact} />
-        <SubTitle>Contacts</SubTitle>
-        <Filter handleFilter={handleFilter} />
-        <ContactList
-          contacts={filteredContacts}
-          removeContact={removeContact}
-        />
-      </Wrapper>
-    </>
+    <Container>
+      <h1>Phonebook</h1>
+      <ContactForm onSubmit={addContact} />
+      <h2>Contacts</h2>
+      {contacts.length > 1 && <Filter value={filter} onChange={handleFilter} />}
+      {contacts.length > 0 ? (
+        <ContactList contacts={visibleContacts} onDelete={deleteContact} />
+      ) : (
+        <p>Your phonebook is empty.</p>
+      )}
+    </Container>
   );
 };
+
+export default App;

@@ -1,0 +1,33 @@
+.label {
+    display: block;
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+}
+
+
+
+.input {
+    display: block;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    margin-bottom: 16px;
+
+    outline: none;
+    width: 100%;
+    padding: 0 12px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.365);
+    backdrop-filter: blur(2px);
+    border-radius: 2px;
+
+    transform: border cubic-bezier(0.4, 0, 0.2, 1) 250ms;
+}
+
+.input:hover {
+    border: 1px solid #A976F5;
+}

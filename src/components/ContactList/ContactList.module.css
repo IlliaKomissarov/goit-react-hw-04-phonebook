@@ -1,0 +1,44 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.4);
+        border: 1px solid #FFFFFF;
+        border-radius: 2px;
+        backdrop-filter: blur(4px);
+        transform: box-shadow cubic-bezier(0.4, 0, 0.2, 1) 250ms;
+}
+
+.item:hover {
+box-shadow: 0px 2px 8px rgba(99, 99, 99, 0.2);
+}
+
+.button_delete {
+    color: white;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: 0.05em;
+    padding: 8px;
+    border-radius: 2px;   
+    border: none;
+    background: linear-gradient(129.39deg, #5f2020 26.8%, #F34C4C 103.39%);
+    transform: background cubic-bezier(0.4, 0, 0.2, 1) 250ms;
+}
+
+.button_delete:hover {
+    background: linear-gradient(129.39deg, #F45A5A 26.8%, #E73131 103.39%);
+}
